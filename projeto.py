@@ -87,7 +87,7 @@ def readTrainingSet(fname,caminho_stop_words):
             if palavra in linha.lower():
                 escore += int(linha[0])
                 freq += 1
-        #Evitando o erro de ser maior que 0
+        #Evitando o erro de tentar dividir por 0
         if escore > 0 and freq > 0:        
             escore_final = escore / freq 
         else:
