@@ -70,6 +70,7 @@ def readTrainingSet(fname,caminho_stop_words):
     a.close()    
     words = {}
     stopping_words = devolve_stopping_words(caminho_stop_words)
+    #Removendo as stopping words e possiveis erros no comentario
     for x in linhas:
         for y in split_on_separators(x[1:]," "):
             if clean_up(y).strip("0123456789\/`") not in stopping_words:
@@ -77,6 +78,7 @@ def readTrainingSet(fname,caminho_stop_words):
     freq = 0
     escore = 0
     escore_final = 0
+    #Computando o Score medio das palavras e a frequencia que elas aparecem nas linhas
     for palavra in palavras:
         freq = 0
         escore = 0
@@ -85,6 +87,7 @@ def readTrainingSet(fname,caminho_stop_words):
             if palavra in linha.lower():
                 escore += int(linha[0])
                 freq += 1
+        #Evitando o erro de ser maior que 0
         if escore > 0 and freq > 0:        
             escore_final = escore / freq 
         else:
@@ -127,7 +130,9 @@ def computeSentiment(review,words,caminho_stop_words):
     count = 0
     palavras = []
     stopping_words = devolve_stopping_words(caminho_stop_words)
+    #Retirando as stopping words do review para poder ignorá-las
     palavras = [clean_up(x) for x in split_on_separators(review," ") if clean_up(x) not in stopping_words]
+    #Computando o score das palavras do test set
     for palavra in palavras:
         if palavra in words:
             score += words[palavra][1]
@@ -135,7 +140,7 @@ def computeSentiment(review,words,caminho_stop_words):
         else:
             score += 2
             count += 1
-
+#Evitando o erro de divisão por zero
     if score > 0:
         return score/count
     else:
@@ -153,6 +158,7 @@ def computeSumSquaredErrors(reviews,words,caminho_stop_words):
     erro = 0
     count = 0
     # TODO: implementar a funcionalidade
+    #Computando Erro
     for x in reviews:
         erro = computeSentiment(x[1],words,caminho_stop_words) - float(x[0])  
         sse += erro ** 2
@@ -175,12 +181,14 @@ def main():
         sys.exit(0)
 
     # Lendo conjunto de treinamento e computando escore das palavras
+    #Inseri mais um argumento como parâmetro, para poder acessar o arquivo das stopping words
     words = readTrainingSet(sys.argv[1],sys.argv[3])
     
     # Lendo conjunto de teste
     reviews = readTestSet(sys.argv[2])
     
     # Inferindo sentimento e computando soma dos quadrados dos erros
+    #Inseri mais um argumento como parâmetro, para poder acessar o arquivo das stopping words
     sse = computeSumSquaredErrors(reviews,words,sys.argv[3])
 
      
