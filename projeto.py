@@ -127,9 +127,7 @@ def computeSentiment(review,words,caminho_stop_words):
     count = 0
     palavras = []
     stopping_words = devolve_stopping_words(caminho_stop_words)
-    for x in split_on_separators(review," "):
-        if clean_up(x) not in stopping_words:
-            palavras.append(clean_up(x))
+    palavras = [clean_up(x) for x in split_on_separators(review," ") if clean_up(x) not in stopping_words]
     for palavra in palavras:
         if palavra in words:
             score += words[palavra][1]
